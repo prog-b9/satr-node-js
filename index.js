@@ -3,8 +3,11 @@ const app = express();
 const port = process.env.port || 3000;
 const bodyParser = require("body-parser");
 const TasksRouter = require("./routes/TasksRoute");
-const StundetRouter = require("./routes/StudentRoute");
+const StudentRouter = require("./routes/StudentRoute");
+const UserRouter = require("./routes/UserRoute");
+const AuthRouter = require("./routes/AuthRoute");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 // create Database and connection and set name
 mongoose
   .connect("mongodb://127.0.0.1:27017/satr")
@@ -15,7 +18,9 @@ mongoose
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/api/todos", TasksRouter);
-app.use("/api/students", StundetRouter);
+app.use("/api/students", StudentRouter);
+app.use("/api/users", UserRouter);
+app.use("/api/login", AuthRouter);
 
 // Page Not Fous 404
 app.all("*", (req, res) => {
