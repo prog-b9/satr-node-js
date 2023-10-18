@@ -7,7 +7,6 @@ const AuthMiddleware = (req, res, next) => {
 
   try {
     const decode = jwt.verify(token, "tokenKey");
-    console.log(decode);
     // req.user => user من عندي انا انشأها
     req.user = decode;
     next();

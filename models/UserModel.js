@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const Joi = require("joi");
 
 const Schema = new mongoose.Schema({
   email: {
@@ -36,4 +37,16 @@ Schema.pre("save", async function (next) {
 
 const Users = mongoose.model("users", Schema);
 
-module.exports = Users;
+const validaitionCreateUser = (body) => {
+  const validateSchema = Joi.object({
+    email: Joi.string().min(3).max(255).email().required(),
+    password: Joi.string().min(8).max(255).required(),
+  });
+
+  return validateSchema.validate(body);
+};
+
+module.exports = {
+  Users,
+  validaitionCreateUser,
+};

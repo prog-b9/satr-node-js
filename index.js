@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
-const port = process.env.port || 3000;
+const port = process.env.PORT || 3000;
 const bodyParser = require("body-parser");
 const TasksRouter = require("./routes/TasksRoute");
 const StudentRouter = require("./routes/StudentRoute");
 const UserRouter = require("./routes/UserRoute");
 const AuthRouter = require("./routes/AuthRoute");
+const TaskSectionRouter = require("./routes/TaskSectionRoute");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 // create Database and connection and set name
@@ -21,6 +22,7 @@ app.use("/api/todos", TasksRouter);
 app.use("/api/students", StudentRouter);
 app.use("/api/users", UserRouter);
 app.use("/api/login", AuthRouter);
+app.use("/api/taskSection", TaskSectionRouter);
 
 // Page Not Fous 404
 app.all("*", (req, res) => {

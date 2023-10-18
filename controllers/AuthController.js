@@ -1,4 +1,4 @@
-const Users = require("../models/UserModel");
+const { Users, validaitionCreateUser } = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -8,11 +8,16 @@ const login = async (req, res) => {
     const findUser = await Users.findOne({ email: req.body.email });
 
     // check from FORM body inputs
-    if (!req.body.email || !req.body.password) {
-      return res
-        .status(400)
-        .json({ message: "email and password are required" });
+    const { error } = validaitionCreateUser(req.body);
+
+    if (error) {
+      return res.json({ message: error.details[0].message });
     }
+    // if (!req.body.email || !req.body.password) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "email and password are required" });
+    // }
     // check from DB
     if (!findUser) {
       return res.status(404).json({ message: "email or password is invalid" });

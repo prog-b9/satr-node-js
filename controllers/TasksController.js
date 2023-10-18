@@ -1,13 +1,10 @@
-const Tasks = require("../models/TasksModel");
+const { Tasks, validationTasks } = require("../models/TasksModel");
+const { TaskSection } = require("../models/TaskSectionModel");
 
 /// GET todos ///////
 const getTasks = async (req, res) => {
   try {
     const getTasks = await Tasks.find();
-
-    if (getTasks.length == 0) {
-      return res.status(404).json({ message: "Tasks (s) is not founds" });
-    }
 
     res.json({
       data: getTasks,
@@ -19,7 +16,7 @@ const getTasks = async (req, res) => {
     });
   }
 };
-/// GET todo One ///////
+/// GET Tasks By section id ///////
 const getTask = async (req, res) => {
   try {
     const getTaskById = await Tasks.findById({ _id: req.params.id });
@@ -38,15 +35,58 @@ const getTask = async (req, res) => {
     });
   }
 };
+// GET S
+const getTaskBySectionId = async (req, res) => {
+  try {
+    const getTaskBySectionId = await Tasks.find({
+      sectionId: req.params.id,
+    });
+
+    const getSectionNameBySectionId = await TaskSection.findOne({
+      _id: req.params.id,
+    });
+
+    if (!getSectionNameBySectionId) {
+      return res
+        .status(404)
+        .json({ message: "Tasks By section id (s) is not founds" });
+    }
+
+    res.json({
+      sectionName: getSectionNameBySectionId.sectionName,
+      data: getTaskBySectionId,
+      count: getTaskBySectionId.length,
+    });
+  } catch (error) {
+    res.json({
+      message: "Tasks By section id (s) is not founds",
+      error: error,
+    });
+  }
+};
 /// POST todos ///////
 const createTask = async (req, res) => {
   try {
-    // if the title is Empty
-    if (!req.body.title) {
-      return res.status(400).json({ message: "Task Is Required" });
+    const { error } = validationTasks(req.body);
+    if (error) {
+      return res.json({ message: error.details[0].message });
     }
+
+    const findSectionId = await TaskSection.findOne({
+      _id: req.body.sectionId,
+    });
+    if (!findSectionId) {
+      return res.status(404).json({ message: "section id is not found" });
+    }
+
+    // if the title is Empty
+    // if (!req.body.title) {
+    //   return res.status(400).json({ message: "Task Is Required" });
+    // }
+
     const newTask = new Tasks({
       title: req.body.title,
+      sectionId: req.body.sectionId,
     });
     await newTask.save();
 
@@ -56,6 +96,7 @@ const createTask = async (req, res) => {
     });
   } catch (error) {
     res.json({
+      message: "section id is not found",
       error: error,
     });
   }
@@ -136,4 +177,5 @@ module.exports = {
   editTask,
   deleteTask,
   deleteTasks,
+  getTaskBySectionId,
 };

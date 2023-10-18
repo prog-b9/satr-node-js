@@ -4,6 +4,7 @@ const AdminMiddleware = require("../middlewares/AdminMiddleware");
 const UserController = require("../controllers/UserController");
 router.get("/", UserController.getUsers);
 router.post("/", UserController.createUser);
+router.post("/admin", UserController.createAdmin);
 router.delete(
   "/",
   [AuthMiddleware, AdminMiddleware],
