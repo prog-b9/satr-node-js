@@ -8,7 +8,6 @@ const UserRouter = require("./routes/UserRoute");
 const AuthRouter = require("./routes/AuthRoute");
 const TaskSectionRouter = require("./routes/TaskSectionRoute");
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
 // create Database and connection and set name
 mongoose
   .connect("mongodb://127.0.0.1:27017/satr")
@@ -21,7 +20,7 @@ app.use(bodyParser.json());
 app.use("/api/todos", TasksRouter);
 app.use("/api/students", StudentRouter);
 app.use("/api/users", UserRouter);
-app.use("/api/login", AuthRouter);
+app.use("/api/auth", AuthRouter);
 app.use("/api/taskSection", TaskSectionRouter);
 
 // Page Not Fous 404

@@ -1,7 +1,7 @@
 const { Users, validaitionCreateUser } = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const invalidToken = new Set();
 const login = async (req, res) => {
   try {
     // find user by email becouse it's username
@@ -13,11 +13,7 @@ const login = async (req, res) => {
     if (error) {
       return res.json({ message: error.details[0].message });
     }
-    // if (!req.body.email || !req.body.password) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "email and password are required" });
-    // }
+
     // check from DB
     if (!findUser) {
       return res.status(404).json({ message: "email or password is invalid" });
@@ -52,7 +48,17 @@ const login = async (req, res) => {
     });
   }
 };
-
+const logout = async (req, res) => {
+  try {
+    const token = req.header("Authorization");
+    invalidToken.add(token);
+    res.json({ message: "logout successfuly" });
+  } catch (error) {
+    res.json({ error: error });
+  }
+};
 module.exports = {
   login,
+  logout,
+  invalidToken,
 };

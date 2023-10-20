@@ -5,9 +5,8 @@ const getUsers = async (req, res) => {
   try {
     const users = await Users.find();
 
-    if (users.length == 0) {
-      return res.status(404).json({ message: "users (S) is not founds" });
-    }
+    console.log(users);
+
     res.json({
       data: users,
       count: users.length,
@@ -58,6 +57,7 @@ const createUser = async (req, res) => {
     const newUser = new Users({
       email: req.body.email,
       password: req.body.password,
+      isAdmin: false,
     });
     await newUser.save();
 

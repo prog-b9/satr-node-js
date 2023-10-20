@@ -4,9 +4,6 @@ const getStudents = async (req, res) => {
   try {
     const students = await Students.find();
 
-    if (students.length == 0) {
-      return res.status(404).json({ message: "Students (s) is not founds" });
-    }
     res.json({
       date: students,
       count: students.length,
